@@ -2,20 +2,36 @@ import { Button, Layout, Menu, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { items } from "./layout-item";
 import { Content, Header } from "antd/es/layout/layout";
-import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-
-
+import { getCookie } from "../config/cookie";
+import { UserInfoEnum } from "../enum";
 
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [token, setToken] = useState(null);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const accessToken = getCookie(UserInfoEnum.ACCESS_TOKEN);
+    if (!accessToken) {
+      navigate("/login");
+    } else {
+      setToken(accessToken);
+    }
+  }, []);
+
+  if (!token) {
+    return <div></div>;
+  }
+
   return (
-    <Layout style={{minHeight: '100vh'}}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
         <Menu
