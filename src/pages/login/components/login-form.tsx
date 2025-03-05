@@ -35,8 +35,6 @@ const LoginForm = () => {
         form={form}
         name="basic"
         layout="vertical"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
         style={{ maxWidth: "100%" }}
         onFinish={onFinish}
         className="login__form"
@@ -57,8 +55,8 @@ const LoginForm = () => {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item label={null}>
-          <Button disabled={isPending} type="primary" htmlType="submit">
+        <Form.Item label={null} style={{width: '100%'}}>
+          <Button disabled={isPending} type="primary" htmlType="submit" style={{textAlign: 'center', width: '100%'}}>
             Submit
           </Button>
         </Form.Item>

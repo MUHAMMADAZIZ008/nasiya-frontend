@@ -2,8 +2,8 @@ import { Button, Layout, Menu, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { items } from "./layout-item";
 import { Content, Header } from "antd/es/layout/layout";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { createElement, useEffect, useState } from "react";
 import {
   LogoutOutlined,
   MenuFoldOutlined,
@@ -11,8 +11,11 @@ import {
 } from "@ant-design/icons";
 import { getCookie, removeCookie } from "../config/cookie";
 import { UserInfoEnum } from "../enum";
+import Bort from "../components/bort";
 
 const MainLayout = () => {
+  const [bortTitle, setBortTitle] = useState("Home");
+  const [bortSubTitle, setBortSubTitle] = useState("Home");
   const [collapsed, setCollapsed] = useState(false);
   const [token, setToken] = useState(null);
   const {
@@ -36,11 +39,38 @@ const MainLayout = () => {
   }
 
   const logoutBtn = () => {
-    removeCookie(UserInfoEnum.ACCESS_TOKEN)
-    removeCookie(UserInfoEnum.REFRESH_TOKEN)
-    removeCookie(UserInfoEnum.USER)
-    setToken(null)
-  }
+    removeCookie(UserInfoEnum.ACCESS_TOKEN);
+    removeCookie(UserInfoEnum.REFRESH_TOKEN);
+    removeCookie(UserInfoEnum.USER);
+    setToken(null);
+  };
+
+  const bortChange = (title: string, subTitle: string) => {
+    setBortTitle(title);
+    if (subTitle) {
+      setBortSubTitle(subTitle);
+    }
+  };
+  const menu = items.map((item, index: number) => {
+    return {
+      key: index,
+      icon: createElement(item.icon),
+      label: <Link to={item?.path || "#"}>{item?.title}</Link>,
+      children: item.children?.length
+        ? item.children.map((innerItem) => ({
+            key: innerItem.path,
+            label: (
+              <Link
+                onClick={() => bortChange(item.title, innerItem.title)}
+                to={innerItem.path}
+              >
+                {innerItem.title}
+              </Link>
+            ),
+          }))
+        : undefined,
+    };
+  });
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -50,7 +80,7 @@ const MainLayout = () => {
           theme="dark"
           mode="inline"
           defaultSelectedKeys={["1"]}
-          items={items}
+          items={menu}
         />
       </Sider>
       <Layout>
@@ -75,7 +105,7 @@ const MainLayout = () => {
           />
           <div
             style={{
-              height: '100%',
+              height: "100%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -103,6 +133,7 @@ const MainLayout = () => {
             borderRadius: borderRadiusLG,
           }}
         >
+          <Bort title={bortTitle} subTitle={bortSubTitle} />
           <Outlet />
         </Content>
       </Layout>

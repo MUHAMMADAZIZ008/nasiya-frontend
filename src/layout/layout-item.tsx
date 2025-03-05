@@ -1,25 +1,46 @@
-import { HomeOutlined, ProfileOutlined, SettingOutlined, UsergroupAddOutlined } from "@ant-design/icons";
-import ReportIcon from "../components/report-icon";
+import {
+  HomeOutlined,
+  ProfileOutlined,
+  SettingOutlined,
+  UsergroupAddOutlined,
+} from "@ant-design/icons";
 
 export const items = [
   {
-    key: "1",
-    icon: <HomeOutlined style={{fontSize: '20px'}}/>,
-    label: "Home",
+    path: "/",
+    icon: HomeOutlined,
+    title: "Home",
   },
   {
-    key: "2",
-    icon: <UsergroupAddOutlined style={{fontSize: '20px'}} />,
-    label: "Customer",
+    path: "/customer",
+    icon: UsergroupAddOutlined,
+    title: "Customer",
   },
   {
-    key: "3",
-    icon: <ProfileOutlined style={{fontSize: '20px'}} />,
-    label: "Report",
+    path: "/report",
+    icon: ProfileOutlined,
+    title: "Report",
   },
   {
-    key: "4",
-    icon: <SettingOutlined  style={{fontSize: '20px'}} />,
-    label: "Settings",
+    icon: SettingOutlined,
+    title: "Settings",
+    children: [
+      {
+        path: "/profile",
+        title: "Profile",
+      },
+      {
+        path: "/protect",
+        title: "Protect",
+      },
+      {
+        path: "/help",
+        title: "Help",
+      },
+      {
+        path: "/offer-complaint",
+        title: "Offer and complaint",
+      },
+    ],
   },
 ];

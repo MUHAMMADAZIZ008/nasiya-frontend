@@ -1,0 +1,74 @@
+.home__section {
+  width: 100%;
+  position: relative;
+}
+.home__calendar-btn {
+  position: absolute;
+  top: 25px;
+  right: 0;
+}
+.home__wrapper {
+  padding: 50px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home__left-box {
+  width: 50%;
+}
+.home__left-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  column-gap: 20px;
+  row-gap: 10px;
+}
+
+.total__blanc-box {
+  margin-bottom: 30px;
+  position: relative;
+  padding: 20px 30px;
+  background-color: #30af49;
+  border-radius: 20px;
+  grid-column: span 2;
+}
+.total__blanc {
+  text-align: center;
+  color: #fff;
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+.total__text {
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+.visible__btn {
+  position: absolute;
+  font-size: 25px;
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
+}
+.home__left-payment-box {
+  border: 1px solid #ececec;
+}
+.home__left-payment-box {
+  padding: 16px;
+  border-radius: 10px;
+}
+.home__left-payment-title {
+  font-size: 25px;
+  margin-bottom: 30px;
+}
+
+.home__left-payment-text {
+    font-size: 20px;
+    color: #30af49;
+}
+
