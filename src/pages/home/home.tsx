@@ -2,12 +2,14 @@ import { use, useState } from "react";
 import "./css/home.css";
 import { useGetStatistic } from "./service/query/use-get-statistic";
 import { EyeInvisibleOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
-import { Alert, Button, Flex, Spin } from "antd";
+import { Alert, Button, Flex, message, Spin } from "antd";
 import CalendarIcon from "../../assets/components/calendar-icon";
 
 const Home = () => {
   const [totalVisible, setTotalVisible] = useState(false);
-  const { data, isLoading, error } = useGetStatistic();
+  const { data, isLoading, error, isError} = useGetStatistic();
+
+  const [messageApi, setOutput] = message.useMessage()
 
   const contentStyle: React.CSSProperties = {
     padding: 50,
@@ -16,6 +18,10 @@ const Home = () => {
   };
 
   const content = <div style={contentStyle} />;
+
+  if(isError) {
+    messageApi.error(error.message)
+  }
 
   if (isLoading) {
     return (
@@ -29,6 +35,7 @@ const Home = () => {
 
   return (
     <section className="home__section">
+      {setOutput}
       {/* <Button
         className="home__calendar-btn"
         style={{ width: "40px", height: "40px", borderRadius: "12px" }}
