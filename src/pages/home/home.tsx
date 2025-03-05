@@ -1,12 +1,31 @@
 import { use, useState } from "react";
 import "./css/home.css";
 import { useGetStatistic } from "./service/query/use-get-statistic";
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { EyeInvisibleOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
+import { Alert, Button, Flex, Spin } from "antd";
+import CalendarIcon from "../../assets/components/calendar-icon";
 
 const Home = () => {
   const [totalVisible, setTotalVisible] = useState(false);
   const { data, isLoading, error } = useGetStatistic();
-  console.log(data);
+
+  const contentStyle: React.CSSProperties = {
+    padding: 50,
+    background: "rgba(0, 0, 0, 0.05)",
+    borderRadius: 4,
+  };
+
+  const content = <div style={contentStyle} />;
+
+  if (isLoading) {
+    return (
+      <Flex gap="middle" style={{margin: '50px 200px'}}>
+        <Spin tip="Loading" size="large">
+          {content}
+        </Spin>
+      </Flex>
+    );
+  }
 
   return (
     <section className="home__section">
@@ -21,7 +40,7 @@ const Home = () => {
             <div className="total__blanc-box">
               <h2 className="total__blanc">
                 {totalVisible ? (
-                  data?.data.totalDebt + " $"
+                  data?.data.totalDebt + " UZS"
                 ) : (
                   <p style={{ letterSpacing: "5px" }}>*****</p>
                 )}
@@ -36,7 +55,7 @@ const Home = () => {
             </div>
             <div className="home__left-payment-box">
               <h3 className="home__left-payment-title">Late payment</h3>
-              <p className="home__left-payment-text" style={{color: 'red'}}>
+              <p className="home__left-payment-text" style={{ color: "red" }}>
                 {data?.data.lateDebtsCount}
               </p>
             </div>
@@ -48,7 +67,14 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className="home__right-box"></div>
+        <div className="home__right-box">
+          <h2 className="home__right-title">Wallet</h2>
+          <div className="home__right-wrapper">
+            <p className="home__right-box-title">Funds in your account</p>
+            <h3 className="home__right-box-text">300000 UZS</h3>
+          </div>
+          <Button className="home__right-plus-btn" type="primary"><PlusOutlined /></Button>
+        </div>
       </div>
     </section>
   );

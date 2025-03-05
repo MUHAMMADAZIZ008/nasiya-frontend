@@ -25,7 +25,7 @@ const LoginForm = () => {
     setCookie(UserInfoEnum.ACCESS_TOKEN, data.accessToken, 14);
     setCookie(UserInfoEnum.REFRESH_TOKEN, data.refreshToken, 30);
     setCookie(UserInfoEnum.USER, data.store, 14);
-    navigate("/");
+    navigate("/", { replace: true });
   }
 
   return (
@@ -55,8 +55,13 @@ const LoginForm = () => {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item label={null} style={{width: '100%'}}>
-          <Button disabled={isPending} type="primary" htmlType="submit" style={{textAlign: 'center', width: '100%'}}>
+        <Form.Item label={null} style={{ width: "100%" }}>
+          <Button
+            disabled={isPending}
+            type="primary"
+            htmlType="submit"
+            style={{ textAlign: "center", width: "100%" }}
+          >
             Submit
           </Button>
         </Form.Item>
