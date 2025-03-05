@@ -31,6 +31,7 @@ const MainLayout = () => {
   }, []);
 
   if (!token) {
+    navigate("/login");
     return <div></div>;
   }
 
