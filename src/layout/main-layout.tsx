@@ -4,8 +4,12 @@ import { items } from "./layout-item";
 import { Content, Header } from "antd/es/layout/layout";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { getCookie } from "../config/cookie";
+import {
+  LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from "@ant-design/icons";
+import { getCookie, removeCookie } from "../config/cookie";
 import { UserInfoEnum } from "../enum";
 
 const MainLayout = () => {
@@ -30,6 +34,13 @@ const MainLayout = () => {
     return <div></div>;
   }
 
+  const logoutBtn = () => {
+    removeCookie(UserInfoEnum.ACCESS_TOKEN)
+    removeCookie(UserInfoEnum.REFRESH_TOKEN)
+    removeCookie(UserInfoEnum.USER)
+    setToken(null)
+  }
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -42,7 +53,15 @@ const MainLayout = () => {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header
+          style={{
+            padding: "0 50px 0 0",
+            background: colorBgContainer,
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+          }}
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -53,6 +72,26 @@ const MainLayout = () => {
               height: 64,
             }}
           />
+          <div
+            style={{
+              height: '100%',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button
+              onClick={logoutBtn}
+              style={{
+                fontSize: "20px",
+                fontWeight: "700",
+                border: "none",
+                display: "block",
+              }}
+            >
+              <LogoutOutlined />
+            </Button>
+          </div>
         </Header>
         <Content
           style={{
