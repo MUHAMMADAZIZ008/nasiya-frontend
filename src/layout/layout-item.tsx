@@ -12,7 +12,7 @@ export const items = [
     title: "Home",
   },
   {
-    path: "/customer",
+    path: "/customers",
     icon: UsergroupAddOutlined,
     title: "Customer",
   },

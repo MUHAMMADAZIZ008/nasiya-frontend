@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const CalendarPage = () => {
   const [date, setDate] = useState(new Date());
-  // const { data, error, isLoading, isError } = useGetOneDay(date);
+  const { data, error, isLoading, isError } = useGetOneDay(date);
   const navigate = useNavigate();
 
   const goBack = () => {

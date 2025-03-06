@@ -3,6 +3,7 @@ import MainLayout from "./layout/main-layout";
 import Home from "./pages/home/home";
 import Login from "./pages/login/login";
 import CalendarPage from "./pages/calendar/calendar";
+import Customers from "./pages/customers/customers";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="calendar-page" element={<CalendarPage />} />
+          <Route path="customers" element={<Customers />} />
         </Route>
       </Routes>
     </>

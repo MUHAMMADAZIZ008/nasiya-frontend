@@ -45,7 +45,9 @@ const MainLayout = () => {
     setToken(null);
   };
 
-  const bortChange = (title: string, subTitle: string) => {
+  const bortChange = (title: string, subTitle?: string) => {
+    console.log({ title, subTitle });
+
     setBortTitle(title);
     if (subTitle) {
       setBortSubTitle(subTitle);
@@ -56,17 +58,14 @@ const MainLayout = () => {
       key: index,
       icon: createElement(item.icon),
       label: <Link to={item?.path || "#"}>{item?.title}</Link>,
+      onClick: () => bortChange(item.title),
+
       children: item.children?.length
         ? item.children.map((innerItem) => ({
+            onClick: () => bortChange(item.title, innerItem.title),
+
             key: innerItem.path,
-            label: (
-              <Link
-                onClick={() => bortChange(item.title, innerItem.title)}
-                to={innerItem.path}
-              >
-                {innerItem.title}
-              </Link>
-            ),
+            label: <Link to={innerItem.path}>{innerItem.title}</Link>,
           }))
         : undefined,
     };
