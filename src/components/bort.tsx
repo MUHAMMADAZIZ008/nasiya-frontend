@@ -1,10 +1,9 @@
 import { Button } from "antd";
 import CalendarIcon from "../assets/components/calendar-icon";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Bort = ({ title, subTitle }: { title: string; subTitle: string }) => {
   const navigate = useNavigate();
-  const location = useLocation()
   
   const openPage = () => {
     navigate("/calendar-page");

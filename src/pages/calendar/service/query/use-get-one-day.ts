@@ -5,11 +5,13 @@ const useGetOneDay = (date: Date) => {
   return useQuery({
     queryKey: ["calendar_data", date],
     queryFn: () =>
-      request.get("/store/one-day-debts", {
-        params: {
-          date: date,
-        },
-      }),
+      request
+        .get("/store/one-day-debts", {
+          params: {
+            date: date,
+          },
+        })
+        .then((res) => res.data),
   });
 };
 
