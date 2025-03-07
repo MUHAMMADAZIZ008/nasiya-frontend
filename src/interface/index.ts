@@ -74,3 +74,8 @@ export interface TableDataType {
   total_debts: number;
   action?: any;
 }
+export interface IUploadedFileRes {
+  filename: string;
+  originalname: string;
+  path: string;
+}

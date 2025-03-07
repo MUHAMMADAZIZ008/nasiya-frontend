@@ -1,43 +1,60 @@
-import { Button, Form, GetProp, Input, Upload, UploadFile, UploadProps } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Upload,
+  UploadFile,
+  UploadProps,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeftOutlined,
   MinusCircleOutlined,
   PlusOutlined,
-  UploadOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
+import useUploadImg from "./service/mutation/use-upload-img";
+import { IUploadedFileRes } from "../../interface";
+import useCreateDebtor from "./service/mutation/use-create-debtor";
 
-type FieldType = {
+export type FieldType = {
   full_name: string;
-  phone_number: string[];
+  phone_numbers: string[];
   address: string;
-  description?: string;
-  images: Blob[];
+  description: string;
+  images: string[];
 };
 
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-
 const CustomerCreate = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const [debtorImages, setDebtorImages] = useState<string[]>([]);
+
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
 
-
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
+  const { mutate, isError, error, isPending } = useUploadImg();
+
+  const [form] = Form.useForm();
+
+  const {
+    mutate: debtorMutate,
+    isError: debtorIsError,
+    isPaused: isPausedDebtor,
+    error: errorDebtor,
+  } = useCreateDebtor();
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
     if (!src) {
       src = await new Promise((resolve) => {
         const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as FileType);
+        reader.readAsDataURL(file.originFileObj as File);
         reader.onload = () => resolve(reader.result as string);
       });
     }
@@ -47,13 +64,78 @@ const CustomerCreate = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
+  const changeUpload: UploadProps["onChange"] = ({ fileList }) => {
+    const formData = new FormData();
+    formData.append(`files`, fileList[0].originFileObj as Blob);
+    mutate(formData, {
+      onSuccess: (data: IUploadedFileRes[]) => {
+        const image = data[0].path;
+        console.log(image);
+        
+        // if (image.length > 2) {
+        //   messageApi.error("Only enter 2 images");
+        //   message;
+        //   return;
+        // }
+        setDebtorImages((state) => [...state, image]);
+      },
+      onError: (error) => {
+        messageApi.error(`Yuklashda xatolik: ${error.message}`);
+      },
+    });
+    setFileList(fileList);
+  };
+  message;
 
   const onFinish = (values: FieldType) => {
-    console.log("Success:", values);
+    // const formData = new FormData();
+
+    // fileList.forEach((file) => {
+    //   formData.append(`files`, file.originFileObj as Blob);
+    // });
+
+    // mutate(formData, {
+    //   onSuccess: (data: IUploadedFileRes[]) => {
+    //     const images = data.map((item) => item.path);
+    //     console.log(images);
+
+    //     if (images.length !== 2) {
+    //       messageApi.error("Only enter 2 images");
+    //       message;
+    //       return;
+    //     }
+    //     form.setFieldsValue({ images });
+    //   },
+    //   onError: (error) => {
+    //     messageApi.error(`Yuklashda xatolik: ${error.message}`);
+    //   },
+    // });
+
+    form.setFieldsValue({ images: debtorImages });
+    values.images = debtorImages
+    console.log(values);
+    console.log(debtorImages);
+    
+    debtorMutate(values, {
+      onSuccess: (res) => {
+        messageApi.success("User successfully created!");
+        form.resetFields();
+        setDebtorImages([])
+      },
+      onError: (error) => {
+        messageApi.error(error.message);
+        console.log(error);
+      },
+    });
+  };
+
+  const onFinishFailed = () => {
+    console.log("Failed:");
   };
 
   return (
     <section className="customer__create-page">
+      {contextHolder}
       <div>
         <Button type="primary" onClick={goBack}>
           <ArrowLeftOutlined />
@@ -61,11 +143,13 @@ const CustomerCreate = () => {
       </div>
 
       <Form
+        form={form}
         layout="vertical"
         name="dynamic_form_item"
         style={{ maxWidth: 600 }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item<FieldType>
@@ -77,7 +161,7 @@ const CustomerCreate = () => {
         </Form.Item>
 
         {/* Dinamik telefon raqamlari qo'shish */}
-        <Form.List name="phone_number">
+        <Form.List name="phone_numbers">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
@@ -130,27 +214,21 @@ const CustomerCreate = () => {
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item
-          label="Upload Image"
-          name="images"
-          valuePropName="fileList"
-          getValueFromEvent={(e) => e?.fileList}
-        >
-          <ImgCrop rotationSlider>
-            <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-              listType="picture-card"
-              fileList={fileList}
-              onChange={onChange}
-              onPreview={onPreview}
-            >
-              {fileList.length < 5 && "+ Upload"}
-            </Upload>
-          </ImgCrop>
+        <Form.Item label="Upload Image">
+          <Upload
+            beforeUpload={() => false}
+            listType="picture-card"
+            fileList={fileList}
+            maxCount={2}
+            onChange={changeUpload}
+            onPreview={onPreview}
+          >
+            {fileList.length < 2 && "+ Upload"}
+          </Upload>
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button disabled={isPausedDebtor} type="primary" htmlType="submit">
             Submit
           </Button>
         </Form.Item>

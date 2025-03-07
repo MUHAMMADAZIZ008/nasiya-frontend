@@ -9,7 +9,7 @@ const useGetAllDebtor = (searchQuery: IQuerySearch) => {
     queryFn: () =>
       request
         .get<{ data: IDebtor[]; message: string; status_code: number }>(
-          "/debtor/search",
+          "/debtor",
           { params: searchQuery }
         )
         .then((res) => res.data),

@@ -64,7 +64,7 @@ const columns: TableProps<TableDataType>["columns"] = [
     dataIndex: "images",
     key: "images",
     render: (text: string) => {
-      return <Image width={200} src={text} />;
+      return <Image width={100} height={50} src={text} />;
     },
   },
   {
