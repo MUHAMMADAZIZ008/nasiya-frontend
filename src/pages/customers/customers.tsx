@@ -13,7 +13,13 @@ import useGetAllDebtor from "./service/query/use-get-all-debtor";
 import "./css/customers.css";
 import { TableDataType } from "../../interface";
 import { useEffect, useState } from "react";
-import { DeleteOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  SearchOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const columns: TableProps<TableDataType>["columns"] = [
   {
@@ -103,7 +109,7 @@ export interface IQuerySearch {
 
 const Customers = () => {
   const [messageApi, contextHolder] = message.useMessage();
-
+  const navigate = useNavigate();
   const [customers, setCustomers] = useState<TableDataType[]>([]);
   const [searchQuery, setSearchQuery] = useState<IQuerySearch>({
     order_by: "ASC",
@@ -189,39 +195,51 @@ const Customers = () => {
   const inputFn = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery((state) => ({ ...state, search: e.target.value }));
   };
-
+  const onChangeCustomerCreate = () => {
+    navigate("/customer-create");
+  };
   return (
     <section className="customer__page">
       {contextHolder}
       <div className="search__box">
-        <div className="search__wrapper">
-          <Input
-            onChange={inputFn}
-            className="search__input"
-            placeholder="Search customers..."
+        <div className="search__config">
+          <div className="search__wrapper">
+            <Input
+              onChange={inputFn}
+              className="search__input"
+              placeholder="Search customers..."
+            />
+            <Button className="search__btn" type="primary">
+              <SearchOutlined />
+            </Button>
+          </div>
+          <Select
+            defaultValue="Search type"
+            style={{ width: 140 }}
+            onChange={searchByFn}
+            options={[
+              { value: "phone_number", label: "By phone number" },
+              { value: "full_name ", label: "By full name" },
+            ]}
           />
-          <Button className="search__btn" type="primary">
-            <SearchOutlined />
-          </Button>
+          <Select
+            defaultValue="Type of order"
+            style={{ width: 120 }}
+            onChange={orderByFn}
+            options={[
+              { value: "ASC", label: "Sorted" },
+              { value: "DESC", label: "Reverse order" },
+            ]}
+          />
         </div>
-        <Select
-          defaultValue="Search type"
-          style={{ width: 140 }}
-          onChange={searchByFn}
-          options={[
-            { value: "phone_number", label: "By phone number" },
-            { value: "full_name ", label: "By full name" },
-          ]}
-        />
-        <Select
-          defaultValue="Type of order"
-          style={{ width: 120 }}
-          onChange={orderByFn}
-          options={[
-            { value: "ASC", label: "Sorted" },
-            { value: "DESC", label: "By full name" },
-          ]}
-        />
+        <Button
+          style={{ fontSize: "18px" }}
+          type="primary"
+          icon={<UserAddOutlined />}
+          onClick={onChangeCustomerCreate}
+        >
+          Create
+        </Button>
       </div>
       <div>
         <Table<TableDataType>
