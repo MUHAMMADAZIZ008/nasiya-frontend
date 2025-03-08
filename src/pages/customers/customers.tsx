@@ -21,84 +21,6 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-const columns: TableProps<TableDataType>["columns"] = [
-  {
-    className: "table__items",
-    title: "Id",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    className: "table__items",
-    title: "Full name",
-    dataIndex: "full_name",
-    key: "full_name",
-  },
-  {
-    className: "table__items",
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    className: "table__items",
-    title: "Phone numbers",
-    dataIndex: "phone_numbers",
-    key: "phone_numbers",
-  },
-  {
-    className: "table__items",
-    title: "Created at",
-    dataIndex: "created_at",
-    key: "created_at",
-  },
-  {
-    className: "table__items",
-    title: "Total debts",
-    dataIndex: "total_debts",
-    key: "debts",
-  },
-  {
-    className: "table__items",
-    title: "Image",
-    dataIndex: "images",
-    key: "images",
-    render: (text: string) => {
-      return <Image width={100} height={50} src={text} />;
-    },
-  },
-  {
-    title: "Action",
-    className: "table__items",
-    key: "action",
-    render: (data) => {
-      return (
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <Button
-            onClick={() => {
-              console.log(data);
-            }}
-            type="default"
-            style={{ backgroundColor: "red", color: "white", fontSize: "18px" }}
-          >
-            <DeleteOutlined />
-          </Button>
-          <Button
-            type="default"
-            style={{
-              backgroundColor: "green",
-              color: "white",
-              fontSize: "18px",
-            }}
-          >
-            <EyeOutlined />
-          </Button>
-        </div>
-      );
-    },
-  },
-];
-
 export interface IQuerySearch {
   skip?: number;
   take?: number;
@@ -108,8 +30,92 @@ export interface IQuerySearch {
 }
 
 const Customers = () => {
-  const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
+
+  const columns: TableProps<TableDataType>["columns"] = [
+    {
+      className: "table__items",
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      className: "table__items",
+      title: "Full name",
+      dataIndex: "full_name",
+      key: "full_name",
+    },
+    {
+      className: "table__items",
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      className: "table__items",
+      title: "Phone numbers",
+      dataIndex: "phone_numbers",
+      key: "phone_numbers",
+    },
+    {
+      className: "table__items",
+      title: "Created at",
+      dataIndex: "created_at",
+      key: "created_at",
+    },
+    {
+      className: "table__items",
+      title: "Total debts",
+      dataIndex: "total_debts",
+      key: "debts",
+    },
+    {
+      className: "table__items",
+      title: "Image",
+      dataIndex: "images",
+      key: "images",
+      render: (text: string) => {
+        return <Image width={100} height={50} src={text} />;
+      },
+    },
+    {
+      title: "Action",
+      className: "table__items",
+      key: "action",
+      render: (data) => {
+        return (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Button
+              onClick={() => {
+                console.log(data);
+              }}
+              type="default"
+              style={{
+                backgroundColor: "red",
+                color: "white",
+                fontSize: "18px",
+              }}
+            >
+              <DeleteOutlined />
+            </Button>
+            <Button
+              onClick={() => navigate(`/debtor-about/${data.key}`)}
+              type="default"
+              style={{
+                backgroundColor: "green",
+                color: "white",
+                fontSize: "18px",
+              }}
+            >
+              <EyeOutlined />
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const [messageApi, contextHolder] = message.useMessage();
   const [customers, setCustomers] = useState<TableDataType[]>([]);
   const [searchQuery, setSearchQuery] = useState<IQuerySearch>({
     order_by: "ASC",

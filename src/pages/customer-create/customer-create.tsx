@@ -40,6 +40,10 @@ const CustomerCreate = () => {
 
   const { mutate, isError, error, isPending } = useUploadImg();
 
+  if (isError) {
+    messageApi.error(error.message);
+  }
+
   const [form] = Form.useForm();
 
   const {
@@ -48,6 +52,10 @@ const CustomerCreate = () => {
     isPaused: isPausedDebtor,
     error: errorDebtor,
   } = useCreateDebtor();
+
+  if (debtorIsError) {
+    messageApi.error(errorDebtor?.message);
+  }
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
@@ -71,7 +79,7 @@ const CustomerCreate = () => {
       onSuccess: (data: IUploadedFileRes[]) => {
         const image = data[0].path;
         console.log(image);
-        
+
         // if (image.length > 2) {
         //   messageApi.error("Only enter 2 images");
         //   message;
@@ -112,15 +120,15 @@ const CustomerCreate = () => {
     // });
 
     form.setFieldsValue({ images: debtorImages });
-    values.images = debtorImages
+    values.images = debtorImages;
     console.log(values);
     console.log(debtorImages);
-    
+
     debtorMutate(values, {
       onSuccess: (res) => {
         messageApi.success("User successfully created!");
         form.resetFields();
-        setDebtorImages([])
+        setDebtorImages([]);
       },
       onError: (error) => {
         messageApi.error(error.message);

@@ -5,6 +5,7 @@ import Login from "./pages/login/login";
 import CalendarPage from "./pages/calendar/calendar";
 import Customers from "./pages/customers/customers";
 import CustomerCreate from "./pages/customer-create/customer-create";
+import DebtorAbout from "./pages/debtor-about/debtor-about";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="calendar-page" element={<CalendarPage />} />
           <Route path="customers" element={<Customers />} />
           <Route path="customer-create" element={<CustomerCreate />} />
+          <Route path="debtor-about/:id" element={<DebtorAbout />} />
         </Route>
       </Routes>
     </>
