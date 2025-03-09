@@ -4,6 +4,7 @@
 .debtor__wrapper{
     display: flex;
     align-items: flex-start;
+    gap: 50px;
     justify-content: space-between;
 }
 .debtor__box {
@@ -21,4 +22,18 @@
 }
 .debtor__item-title {
     margin-bottom: 8px;
+}
+.debtor__debt-box {
+    flex-grow: 1;
+}
+
+.debtor__debt-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.debtor__control_text {
+    font-size: 20px;
+    font-weight: 700;
 }

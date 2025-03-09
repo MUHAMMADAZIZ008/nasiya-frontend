@@ -17,6 +17,8 @@ import { useState } from "react";
 import useUploadImg from "./service/mutation/use-upload-img";
 import { IUploadedFileRes } from "../../interface";
 import useCreateDebtor from "./service/mutation/use-create-debtor";
+import { useDispatch } from "react-redux";
+import { changeValue } from "../../store/slices/boart";
 
 export type FieldType = {
   full_name: string;
@@ -27,6 +29,10 @@ export type FieldType = {
 };
 
 const CustomerCreate = () => {
+  const dispatch = useDispatch();
+
+  dispatch(changeValue({ title: "Customers", subTitle: "Create customers" }));
+
   const [messageApi, contextHolder] = message.useMessage();
 
   const [debtorImages, setDebtorImages] = useState<string[]>([]);

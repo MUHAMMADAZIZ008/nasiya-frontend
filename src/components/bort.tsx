@@ -1,10 +1,12 @@
 import { Button } from "antd";
 import CalendarIcon from "../assets/components/calendar-icon";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
-const Bort = ({ title, subTitle }: { title: string; subTitle: string }) => {
+const Bort = () => {
   const navigate = useNavigate();
-  
+  const { title, subTitle } = useSelector((state: RootState) => state.board);
   const openPage = () => {
     navigate("/calendar-page");
   };

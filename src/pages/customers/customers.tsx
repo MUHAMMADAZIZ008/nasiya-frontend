@@ -22,6 +22,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import useDeleteDebtor from "./service/mutation/use-delete-debtor";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { changeValue } from "../../store/slices/boart";
 
 export interface IQuerySearch {
   skip?: number;
@@ -32,6 +34,9 @@ export interface IQuerySearch {
 }
 
 const Customers = () => {
+  const dispatch = useDispatch();
+
+  dispatch(changeValue({ title: "Customers", subTitle: "Customers" }));
   const navigate = useNavigate();
 
   const [messageApi, contextHolder] = message.useMessage();

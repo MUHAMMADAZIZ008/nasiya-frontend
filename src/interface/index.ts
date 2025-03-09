@@ -79,3 +79,14 @@ export interface IUploadedFileRes {
   originalname: string;
   path: string;
 }
+
+export interface DebtTableType {
+  key: string;
+  id: string;
+  created_at: string;
+  next_payment_date: string;
+  debt_status: string;
+  debt_sum: number;
+  images: string;
+  action?: any;
+}

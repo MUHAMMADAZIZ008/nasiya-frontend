@@ -14,8 +14,6 @@ import { UserInfoEnum } from "../enum";
 import Bort from "../components/bort";
 
 const MainLayout = () => {
-  const [bortTitle, setBortTitle] = useState("Home");
-  const [bortSubTitle, setBortSubTitle] = useState("Home");
   const [collapsed, setCollapsed] = useState(false);
   const [token, setToken] = useState(null);
   const {
@@ -44,26 +42,14 @@ const MainLayout = () => {
     removeCookie(UserInfoEnum.USER);
     setToken(null);
   };
-
-  const bortChange = (title: string, subTitle?: string) => {
-    console.log({ title, subTitle });
-
-    setBortTitle(title);
-    if (subTitle) {
-      setBortSubTitle(subTitle);
-    }
-  };
   const menu = items.map((item, index: number) => {
     return {
       key: index,
       icon: createElement(item.icon),
       label: <Link to={item?.path || "#"}>{item?.title}</Link>,
-      onClick: () => bortChange(item.title),
 
       children: item.children?.length
         ? item.children.map((innerItem) => ({
-            onClick: () => bortChange(item.title, innerItem.title),
-
             key: innerItem.path,
             label: <Link to={innerItem.path}>{innerItem.title}</Link>,
           }))
@@ -132,7 +118,7 @@ const MainLayout = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Bort title={bortTitle} subTitle={bortSubTitle} />
+          <Bort />
           <Outlet />
         </Content>
       </Layout>

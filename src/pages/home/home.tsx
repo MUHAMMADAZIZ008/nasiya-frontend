@@ -1,15 +1,24 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import "./css/home.css";
 import { useGetStatistic } from "./service/query/use-get-statistic";
-import { EyeInvisibleOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
-import { Alert, Button, Flex, message, Spin } from "antd";
-import CalendarIcon from "../../assets/components/calendar-icon";
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { Button, Flex, message, Spin } from "antd";
+import { useDispatch } from "react-redux";
+import { changeValue } from "../../store/slices/boart";
 
 const Home = () => {
-  const [totalVisible, setTotalVisible] = useState(false);
-  const { data, isLoading, error, isError} = useGetStatistic();
+  const dispatch = useDispatch();
 
-  const [messageApi, setOutput] = message.useMessage()
+  dispatch(changeValue({ title: "Home", subTitle: "Home" }));
+
+  const [totalVisible, setTotalVisible] = useState(false);
+  const { data, isLoading, error, isError } = useGetStatistic();
+
+  const [messageApi, setOutput] = message.useMessage();
 
   const contentStyle: React.CSSProperties = {
     padding: 50,
@@ -19,13 +28,13 @@ const Home = () => {
 
   const content = <div style={contentStyle} />;
 
-  if(isError) {
-    messageApi.error(error.message)
+  if (isError) {
+    messageApi.error(error.message);
   }
 
   if (isLoading) {
     return (
-      <Flex gap="middle" style={{margin: '50px 200px'}}>
+      <Flex gap="middle" style={{ margin: "50px 200px" }}>
         <Spin tip="Loading" size="large">
           {content}
         </Spin>
@@ -80,7 +89,9 @@ const Home = () => {
             <p className="home__right-box-title">Funds in your account</p>
             <h3 className="home__right-box-text">300000 UZS</h3>
           </div>
-          <Button className="home__right-plus-btn" type="primary"><PlusOutlined /></Button>
+          <Button className="home__right-plus-btn" type="primary">
+            <PlusOutlined />
+          </Button>
         </div>
       </div>
     </section>

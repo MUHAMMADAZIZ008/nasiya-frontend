@@ -4,8 +4,13 @@ import { useNavigate } from "react-router-dom";
 import "./css/calendar.css";
 import useGetOneDay from "./service/query/use-get-one-day";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { changeValue } from "../../store/slices/boart";
 
 const CalendarPage = () => {
+  const dispatch = useDispatch();
+
+  dispatch(changeValue({ title: "Home", subTitle: "Calendar" }));
   const [date, setDate] = useState(new Date());
   const { data, error, isLoading, isError } = useGetOneDay(date);
   const navigate = useNavigate();
