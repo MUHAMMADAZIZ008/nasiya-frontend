@@ -1,0 +1,24 @@
+.debtor__section {
+    padding-top: 30px;
+}
+.debtor__wrapper{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.debtor__box {
+    width: 30%;
+}
+.debtor__content-box {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.debtor__item-box {
+    padding: 20px 15px;
+    background-color: #BBD2FC;
+    border-radius: 16px;
+}
+.debtor__item-title {
+    margin-bottom: 8px;
+}

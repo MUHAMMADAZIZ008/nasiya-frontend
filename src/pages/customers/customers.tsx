@@ -20,6 +20,8 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import useDeleteDebtor from "./service/mutation/use-delete-debtor";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface IQuerySearch {
   skip?: number;
@@ -31,6 +33,31 @@ export interface IQuerySearch {
 
 const Customers = () => {
   const navigate = useNavigate();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const client = useQueryClient();
+
+  const {
+    mutate,
+    data: deleteData,
+    isPending,
+    isError: deleteIsError,
+    error: deleteError,
+  } = useDeleteDebtor();
+
+  if (deleteIsError) {
+    messageApi.error(deleteError.message);
+  }
+
+  const onDebtorDelete = (data: { key: string }) => {
+    mutate(data.key, {
+      onSuccess: () => {
+        messageApi.success("Debtor successfully deleted");
+        client.invalidateQueries({ queryKey: ["debtors_list"] });
+      },
+    });
+  };
 
   const columns: TableProps<TableDataType>["columns"] = [
     {
@@ -87,8 +114,9 @@ const Customers = () => {
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <Button
               onClick={() => {
-                console.log(data);
+                onDebtorDelete(data);
               }}
+              disabled={isPending}
               type="default"
               style={{
                 backgroundColor: "red",
@@ -115,7 +143,6 @@ const Customers = () => {
     },
   ];
 
-  const [messageApi, contextHolder] = message.useMessage();
   const [customers, setCustomers] = useState<TableDataType[]>([]);
   const [searchQuery, setSearchQuery] = useState<IQuerySearch>({
     order_by: "ASC",
@@ -134,7 +161,6 @@ const Customers = () => {
   // });
 
   const { data, isLoading, error, isError } = useGetAllDebtor(searchQuery);
-  console.log(data);
 
   if (isError) {
     contextHolder;
