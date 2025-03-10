@@ -13,7 +13,8 @@ export interface IDebtImage {
 
 export interface IDebt {
   id: string;
-  created_at: string;
+  created_at: Date;
+  debt_name: string;
   updated_at: string;
   total_debt_sum: string;
   total_month: string;
@@ -37,14 +38,14 @@ export interface IStoreStatistic {
   message: string;
 }
 
-interface IDebtorPhone {
+export interface IDebtorPhone {
   id: string;
   created_at: string;
   updated_at: string;
   phone_number: string;
 }
 
-interface IDebtorImg {
+export interface IDebtorImg {
   id: string;
   created_at: string;
   updated_at: string;
@@ -61,6 +62,12 @@ export interface IDebtor {
   phone_numbers: IDebtorPhone[];
   images: IDebtorImg[];
   debts: IDebt[];
+}
+
+export interface IDebtorData {
+  data: IDebtor;
+  message: string;
+  status_code: number;
 }
 
 export interface TableDataType {
@@ -83,10 +90,10 @@ export interface IUploadedFileRes {
 export interface DebtTableType {
   key: string;
   id: string;
+  debt_name: string;
   created_at: string;
   next_payment_date: string;
   debt_status: string;
   debt_sum: number;
-  images: string;
   action?: any;
 }

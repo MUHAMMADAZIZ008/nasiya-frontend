@@ -19,6 +19,7 @@ import { IUploadedFileRes } from "../../interface";
 import useCreateDebtor from "./service/mutation/use-create-debtor";
 import { useDispatch } from "react-redux";
 import { changeValue } from "../../store/slices/boart";
+import "./css/customer-create.css";
 
 export type FieldType = {
   full_name: string;
@@ -44,7 +45,7 @@ const CustomerCreate = () => {
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const { mutate, isError, error, isPending } = useUploadImg();
+  const { mutate, isError, error } = useUploadImg();
 
   if (isError) {
     messageApi.error(error.message);
@@ -84,13 +85,7 @@ const CustomerCreate = () => {
     mutate(formData, {
       onSuccess: (data: IUploadedFileRes[]) => {
         const image = data[0].path;
-        console.log(image);
 
-        // if (image.length > 2) {
-        //   messageApi.error("Only enter 2 images");
-        //   message;
-        //   return;
-        // }
         setDebtorImages((state) => [...state, image]);
       },
       onError: (error) => {
@@ -99,42 +94,19 @@ const CustomerCreate = () => {
     });
     setFileList(fileList);
   };
-  message;
 
   const onFinish = (values: FieldType) => {
-    // const formData = new FormData();
-
-    // fileList.forEach((file) => {
-    //   formData.append(`files`, file.originFileObj as Blob);
-    // });
-
-    // mutate(formData, {
-    //   onSuccess: (data: IUploadedFileRes[]) => {
-    //     const images = data.map((item) => item.path);
-    //     console.log(images);
-
-    //     if (images.length !== 2) {
-    //       messageApi.error("Only enter 2 images");
-    //       message;
-    //       return;
-    //     }
-    //     form.setFieldsValue({ images });
-    //   },
-    //   onError: (error) => {
-    //     messageApi.error(`Yuklashda xatolik: ${error.message}`);
-    //   },
-    // });
-
     form.setFieldsValue({ images: debtorImages });
     values.images = debtorImages;
     console.log(values);
     console.log(debtorImages);
 
     debtorMutate(values, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         messageApi.success("User successfully created!");
         form.resetFields();
         setDebtorImages([]);
+        navigate(-1);
       },
       onError: (error) => {
         messageApi.error(error.message);

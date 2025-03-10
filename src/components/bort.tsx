@@ -27,7 +27,7 @@ const Bort = () => {
           {title === "Home" ? "Dashboard" : title}
         </h2>
         <p style={{ fontSize: "16px", lineHeight: "157%", fontWeight: "600" }}>
-          {subTitle ? title : subTitle}
+          {subTitle ? subTitle : title}
         </p>
       </div>
       {title === "Home" ? (
