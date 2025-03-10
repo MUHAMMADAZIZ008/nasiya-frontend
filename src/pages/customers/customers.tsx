@@ -45,7 +45,6 @@ const Customers = () => {
 
   const {
     mutate,
-    data: deleteData,
     isPending,
     isError: deleteIsError,
     error: deleteError,

@@ -97,3 +97,40 @@ export interface DebtTableType {
   debt_sum: number;
   action?: any;
 }
+
+// likes
+export interface LikeApiResponse {
+  status_code: number;
+  message: string;
+  data: LikeData;
+}
+
+export interface LikeData {
+  store: string;
+  debtor: string;
+  id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+
+//store
+
+export interface Store {
+  id: string;
+  full_name: string;
+  login: string;
+  phone_number: string;
+  pin_code: number;
+  image: string | null;
+  wallet: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Profile {
+  status_code: number;
+  message: string;
+  data: Store;
+}

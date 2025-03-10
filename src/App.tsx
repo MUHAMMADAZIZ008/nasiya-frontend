@@ -7,6 +7,7 @@ import Customers from "./pages/customers/customers";
 import CustomerCreate from "./pages/customer-create/customer-create";
 import DebtorAbout from "./pages/debtor-about/debtor-about";
 import DebtsCreate from "./pages/debt-create/debts-create";
+import Profile from "./pages/profile/profile";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="customer-create" element={<CustomerCreate />} />
           <Route path="debtor-about/:id" element={<DebtorAbout />} />
           <Route path="debt-create/:id" element={<DebtsCreate />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </>

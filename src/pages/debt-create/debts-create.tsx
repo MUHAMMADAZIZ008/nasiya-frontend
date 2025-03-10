@@ -184,7 +184,7 @@ const DebtsCreate = () => {
             { required: true, message: "Please input your description!" },
           ]}
         >
-          <Input />
+          <Input.TextArea />
         </Form.Item>
 
         <Form.Item label="Upload Image">

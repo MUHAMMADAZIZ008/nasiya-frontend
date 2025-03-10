@@ -1,6 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeftOutlined,
+  DeleteOutlined,
+  EyeOutlined,
   StarOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
@@ -9,20 +11,28 @@ import useGetDebtor from "./service/query/use-get-debtor";
 import { Button, Image, message, Spin, Table, TableProps } from "antd";
 import "./css/debtor-about.css";
 import { DebtTableType } from "../../interface";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { changeValue } from "../../store/slices/boart";
+import useDeleteDebt from "./service/mutation/use-delete-debt";
+import { useQueryClient } from "@tanstack/react-query";
+import useLikeCreate from "./service/mutation/use-like-create";
+import useGetLike from "./service/query/use-get-like";
+import useDeleteLike from "./service/mutation/use-delete-like";
 
 const DebtorAbout = () => {
   const dispatch = useDispatch();
-  const likeButtonRef = useRef<HTMLButtonElement | null>(null);
-  const [likeButtonToggle, setLikeButtonToggle] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   const [messageApi, setOutput] = message?.useMessage();
   const navigate = useNavigate();
   const { id } = useParams();
   const debtorId = id ?? "";
   const { data, isError, error, isLoading } = useGetDebtor(debtorId);
-  // const [debtor, setDebtor] = useState<Omit<IDebtor, 'images'>>();
+  const {
+    mutate,
+    error: deleteError,
+    isPending: deletePending,
+  } = useDeleteDebt();
 
   const goBack = () => {
     navigate(-1);
@@ -32,7 +42,7 @@ const DebtorAbout = () => {
     data?.debts?.map((item, index) => {
       return {
         key: item?.id,
-        created_at: String(item?.created_at),
+        created_at: String(item?.created_at).split("T")[0],
         debt_name: item.debt_name,
         debt_status: item?.debt_status,
         debt_sum: item?.debt_sum,
@@ -48,6 +58,18 @@ const DebtorAbout = () => {
       messageApi.error(error.message);
     }
   }, []);
+
+  const onDebtDelete = (data: { key: string }) => {
+    mutate(data.key, {
+      onSuccess: () => {
+        messageApi.success("successfully delete!");
+        queryClient.invalidateQueries({ queryKey: ["one_debtor"] });
+      },
+    });
+  };
+  if (deleteError) {
+    messageApi.error(deleteError.message);
+  }
 
   const columns: TableProps<DebtTableType>["columns"] = [
     {
@@ -91,22 +113,73 @@ const DebtorAbout = () => {
         );
       },
     },
+    {
+      title: "Action",
+      className: "table__items",
+      key: "action",
+      render: (data) => {
+        return (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Button
+              onClick={() => {
+                onDebtDelete(data);
+              }}
+              type="default"
+              disabled={deletePending}
+              style={{
+                backgroundColor: "red",
+                color: "white",
+                fontSize: "18px",
+              }}
+            >
+              <DeleteOutlined />
+            </Button>
+            <Button
+              onClick={() => navigate(`/debt-about/${data.key}`)}
+              type="default"
+              style={{
+                backgroundColor: "green",
+                color: "white",
+                fontSize: "18px",
+              }}
+            >
+              <EyeOutlined />
+            </Button>
+          </div>
+        );
+      },
+    },
   ];
 
   //debt create
   const onDebtCreate = () => {
     navigate(`/debt-create/${data?.id}`);
   };
+
+  // likes
+
+  const { mutate: LikeMutate } = useLikeCreate();
+  const { data: LikeData } = useGetLike(data?.id || "");
+  const { mutate: likeDeletMutate } = useDeleteLike();
+
   const clickLike = () => {
-    if (likeButtonToggle && likeButtonRef.current) {
-      likeButtonRef.current?.style &&
-        (likeButtonRef.current.style.color = "yellow");
-    } else if (likeButtonToggle === false) {
-      likeButtonRef.current?.style &&
-        (likeButtonRef.current.style.color = "block");
+    if (!LikeData) {
+      LikeMutate(debtorId);
+    } else if (LikeData?.status_code === 200) {
+      likeDeletMutate(LikeData.data.id);
     }
-    setLikeButtonToggle(!likeButtonToggle);
   };
+
+  const likeBtn = {
+    fontSize: "20px",
+    color: "black",
+  };
+  if (!LikeData) {
+    likeBtn.color = "black";
+  } else {
+    likeBtn.color = "yellow";
+  }
+
   return (
     <section className="debtor__section">
       {setOutput}
@@ -127,12 +200,7 @@ const DebtorAbout = () => {
               >
                 <ArrowLeftOutlined />
               </Button>
-              <Button
-                style={{ fontSize: "20px" }}
-                ref={likeButtonRef}
-                type="text"
-                onClick={clickLike}
-              >
+              <Button style={likeBtn} type="text" onClick={clickLike}>
                 <StarOutlined />
               </Button>
             </div>
@@ -180,8 +248,8 @@ const DebtorAbout = () => {
                   }}
                 >
                   {data?.images
-                    ? data.images.map((item) => (
-                        <Image width={200} src={item.image} />
+                    ? data.images.map((item, index) => (
+                        <Image key={index} width={200} src={item.image} />
                       ))
                     : ""}
                 </Image.PreviewGroup>
