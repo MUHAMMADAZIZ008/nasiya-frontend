@@ -24,6 +24,7 @@ import useDeleteDebtor from "./service/mutation/use-delete-debtor";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { changeValue } from "../../store/slices/boart";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export interface IQuerySearch {
   skip?: number;
@@ -231,9 +232,11 @@ const Customers = () => {
   const inputFn = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery((state) => ({ ...state, search: e.target.value }));
   };
+
   const onChangeCustomerCreate = () => {
     navigate("/customer-create");
   };
+
   return (
     <section className="customer__page">
       {contextHolder}

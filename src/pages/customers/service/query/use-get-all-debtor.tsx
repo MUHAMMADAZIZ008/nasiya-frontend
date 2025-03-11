@@ -5,14 +5,24 @@ import { IQuerySearch } from "../../customers";
 
 const useGetAllDebtor = (searchQuery: IQuerySearch) => {
   return useQuery({
-    queryKey: ["debtors_list"],
+    queryKey: ["debtors_list",searchQuery],
     queryFn: () =>
       request
         .get<{ data: IDebtor[]; message: string; status_code: number }>(
-          "/debtor",
-          { params: searchQuery }
+          "/debtor/search",
+          {
+            params: {
+              search: searchQuery.search,
+              search_by: searchQuery.search_by,
+              order_by: searchQuery.order_by,
+              take: searchQuery.take,
+              skip: searchQuery.skip,
+            },
+          }
         )
-        .then((res) => res.data),
+        .then((res) => {
+          return res.data;
+        }),
   });
 };
 

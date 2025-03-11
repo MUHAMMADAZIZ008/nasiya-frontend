@@ -239,20 +239,17 @@ const DebtorAbout = () => {
                 <h3 className="debtor__item-text">{data?.address || "N/A"}</h3>
               </div>
               <div className="debtor__item-img-box">
-                <Image.PreviewGroup
-                  preview={{
-                    onChange: (current, prev) =>
-                      console.log(
-                        `current index: ${current}, prev index: ${prev}`
-                      ),
-                  }}
-                >
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                   {data?.images
-                    ? data.images.map((item, index) => (
-                        <Image key={index} width={200} src={item.image} />
-                      ))
+                    ? data.images.map((item, index) => {
+                        console.log(item.image, index);
+
+                        return (
+                          <Image key={index} width={150} src={item.image} />
+                        );
+                      })
                     : ""}
-                </Image.PreviewGroup>
+                </div>
               </div>
             </div>
           </div>
