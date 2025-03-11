@@ -149,24 +149,22 @@ const Customers = () => {
   ];
 
   const [customers, setCustomers] = useState<TableDataType[]>([]);
-  const [searchQuery, setSearchQuery] = useState<IQuerySearch>({
-    order_by: "ASC",
-    search: "",
-    search_by: "full_name",
+  
+  const [searchValue, setSearchValue] = useState("");
+  const searchResultValue = useDebounce(searchValue, 1000);
+
+  const [searchByValue, setSearchByValue] = useState("full_name");
+  const [orderByValue, setOrderByValue] = useState("ASC");
+  const searchQuery = {
+    order_by: orderByValue,
+    search: searchResultValue,
+    search_by: searchByValue,
     skip: 0,
     take: 10,
-  });
-
-  // const [resultQuery, setResultQuery] = useState<IQuerySearch>({
-  //   order_by: "ASC",
-  //   search: "",
-  //   search_by: "full_name",
-  //   skip: 0,
-  //   take: 10,
-  // });
-
+  };
   const { data, isLoading, error, isError } = useGetAllDebtor(searchQuery);
-
+  console.log(data);
+  
   if (isError) {
     contextHolder;
     contextHolder;
@@ -178,16 +176,16 @@ const Customers = () => {
       const newCustomers: TableDataType[] = data?.data?.map((item, index) => {
         return {
           id: String(index + 1),
-          created_at: item.created_at.split("T")[0],
-          address: item.address,
-          full_name: item.full_name,
-          images: item.images[0].image,
-          total_debts: item.debts.reduce(
-            (acc, debt) => +debt.debt_sum + acc,
+          created_at: item?.created_at?.split("T")[0],
+          address: item?.address,
+          full_name: item?.full_name,
+          images: item?.images[0]?.image,
+          total_debts: item?.debts.reduce(
+            (acc, debt) => +debt?.debt_sum + acc,
             0
           ),
-          key: item.id,
-          phone_numbers: item.phone_numbers[0].phone_number,
+          key: item?.id,
+          phone_numbers: item?.phone_numbers[0]?.phone_number,
         };
       });
       setCustomers(newCustomers);
@@ -222,15 +220,15 @@ const Customers = () => {
   }
 
   const searchByFn = (value: string) => {
-    if (value) setSearchQuery((state) => ({ ...state, search_by: value }));
+    if (value) setSearchByValue(value);
   };
 
   const orderByFn = (value: string) => {
-    if (value) setSearchQuery((state) => ({ ...state, order_by: value }));
+    if (value) setOrderByValue(value);
   };
 
   const inputFn = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery((state) => ({ ...state, search: e.target.value }));
+    setSearchValue(e.target.value);
   };
 
   const onChangeCustomerCreate = () => {
@@ -245,6 +243,7 @@ const Customers = () => {
           <div className="search__wrapper">
             <Input
               onChange={inputFn}
+              value={searchValue}
               className="search__input"
               placeholder="Search customers..."
             />
