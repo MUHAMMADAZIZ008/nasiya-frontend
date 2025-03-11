@@ -113,7 +113,6 @@ export interface LikeData {
   updated_at: string;
 }
 
-
 //store
 
 export interface Store {
@@ -127,6 +126,8 @@ export interface Store {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  hashed_password: string;
+  email: string;
 }
 
 export interface Profile {

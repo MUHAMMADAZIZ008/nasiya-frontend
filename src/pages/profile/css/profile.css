@@ -1,0 +1,18 @@
+.profile {
+    padding-top: 30px;
+}
+.profile__wrapper {
+    display: flex;
+    align-items: self-start;
+    justify-content: space-between;
+    gap: 30px;
+}
+.profile__aside {
+    width: 30%;
+}
+.profile__content {
+    flex-grow: 1;
+}
+.profile__name {
+    font-size: 30px;
+}
