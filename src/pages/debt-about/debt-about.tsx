@@ -1,11 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useOneDebt from "./service/query/use-one-debt";
 import { IDebtImage } from "../../interface";
-import { Button, Form, FormProps, Input, Spin } from "antd";
+import { Button, Form, FormProps, Image, Input, message, Spin } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 
 import "./css/debt-about.css";
+import { useDispatch } from "react-redux";
+import { changeValue } from "../../store/slices/boart";
 type FieldType = {
   debt_name: string;
   next_payment_date: string;
@@ -18,14 +20,24 @@ type FieldType = {
 };
 
 const DebtAbout = () => {
+  const dispatch = useDispatch();
+  dispatch(changeValue({ title: "Debt", subTitle: "About" }));
+
+  const [messageApi, setOutput] = message?.useMessage();
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, isLoading, error } = useOneDebt(id || "");
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     console.log("Success:", values);
   };
+  
+  if (error) {
+    messageApi.error(error.message);
+  }
+
   const [form] = Form.useForm();
   useEffect(() => {
+    
     if (data) {
       form.setFieldsValue({
         debt_name: data?.debt_name,
@@ -37,15 +49,17 @@ const DebtAbout = () => {
         total_month: data?.total_month,
       });
     }
-  }, [data]);
+  }, [data, isLoading, form]);
 
   if (isLoading) <Spin />;
 
   const goBack = () => {
     navigate(-1);
   };
+  
   return (
     <section className="debt__about">
+      {setOutput}
       <Button style={{ marginBottom: "10px" }} type="primary" onClick={goBack}>
         <ArrowLeftOutlined />
       </Button>
@@ -114,12 +128,20 @@ const DebtAbout = () => {
             >
               <Input />
             </Form.Item>
+            <Form.Item>
+              {data?.images?.map((item) => (
+                <Image src={item.image}/>
+              ))}
+            </Form.Item>
             <Form.Item label={null}>
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>
             </Form.Item>
           </Form>
+        </div>
+        <div>
+          <h2>{data?.debt_name}</h2>
         </div>
       </div>
     </section>

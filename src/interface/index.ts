@@ -135,3 +135,17 @@ export interface Profile {
   message: string;
   data: Store;
 }
+
+// calendar date
+export interface CalendarData {
+  total_debt_sum: string;
+  total_month: number;
+  full_name: string;
+}
+
+export interface CalendarApi {
+  status_code: number;
+  message: string;
+  total_day_debt: string;
+  data: CalendarData[];
+}
