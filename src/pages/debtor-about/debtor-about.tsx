@@ -239,7 +239,13 @@ const DebtorAbout = () => {
                 <h3 className="debtor__item-text">{data?.address || "N/A"}</h3>
               </div>
               <div className="debtor__item-img-box">
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
                   {data?.images
                     ? data.images.map((item, index) => {
                         console.log(item.image, index);

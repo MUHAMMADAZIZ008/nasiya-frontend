@@ -5,6 +5,8 @@
 .calendar__box {
     padding: 30px 0 0;
     display: flex;
+    justify-content: space-between;
+    gap: 100px;
     align-items: top;
     height: 100%;
 }
@@ -53,4 +55,7 @@
     font-size: 20px;
     text-align: center;
     overflow: auto;
+}
+.calendar__table {
+    width: 80%;
 }

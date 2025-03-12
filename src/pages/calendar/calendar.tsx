@@ -1,11 +1,4 @@
-import {
-  Button,
-  Calendar,
-  DatePicker,
-  DatePickerProps,
-  message,
-  Spin,
-} from "antd";
+import { Button, Calendar, message, Spin, Table, TableProps } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./css/calendar.css";
@@ -14,6 +7,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { changeValue } from "../../store/slices/boart";
 import dayjs, { Dayjs } from "dayjs";
+import { CalendarData, CalendarTable } from "../../interface";
 
 const CalendarPage = () => {
   const dispatch = useDispatch();
@@ -26,7 +20,7 @@ const CalendarPage = () => {
   const [date, setDate] = useState<string>(formattedDate);
   const { data, error, isLoading, isError } = useGetOneDay(date);
   console.log(data);
-  
+
   const navigate = useNavigate();
   const [messageApi, setOutput] = message.useMessage();
 
@@ -48,6 +42,40 @@ const CalendarPage = () => {
     setDate(formattedDate);
   };
 
+  const columns: TableProps<CalendarTable>["columns"] = [
+    {
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Id",
+      dataIndex: "full_name",
+      key: "full_name",
+    },
+    {
+      title: "Total sums",
+      dataIndex: "total_debt_sum",
+      key: "total_debt_sum",
+    },
+    {
+      title: "Total month",
+      dataIndex: "total_month",
+      key: "total_month",
+    },
+  ];
+
+  const tableData: CalendarTable[] =
+    data?.data?.map((item, index) => {
+      return {
+        key: item.full_name,
+        full_name: item.full_name,
+        id: index + 1,
+        total_debt_sum: item.total_debt_sum,
+        total_month: item.total_month,
+      };
+    }) || [];
+
   return (
     <section className="calendar__page">
       {setOutput}
@@ -60,7 +88,7 @@ const CalendarPage = () => {
       <div className="calendar__box">
         <div className="calendar__box-info">
           <Calendar
-            onChange={dateChange}
+            onSelect={dateChange}
             className="calendar__date"
             style={{ width: "400px" }}
             fullscreen={false}
@@ -72,15 +100,30 @@ const CalendarPage = () => {
             </h3>
             <div className="calendar__price-box">
               <p className="calendar__price-date">Monthly total:</p>
-              <p className="calendar__price-total">5000000 UZS</p>
+              <p className="calendar__price-total">
+                {data?.data?.reduce(
+                  (acc, item) => acc + +item.total_debt_sum,
+                  0
+                ) + ' ' || 0 + " "} 
+                UZS
+              </p>
             </div>
             <div className="calendar__price-box">
               <p className="calendar__price-date">Daily total:</p>
-              <p className="calendar__price-total">5000000 UZS</p>
+              <p className="calendar__price-total">
+                {" "}
+                {data?.data?.reduce(
+                  (acc, item) => acc + +item.total_debt_sum,
+                  0
+                ) + ' ' || 0 + " "} 
+                UZS
+              </p>
             </div>
           </div>
         </div>
-        <div></div>
+        <div className="calendar__table">
+          <Table<CalendarTable> columns={columns} dataSource={tableData} />
+        </div>
       </div>
     </section>
   );

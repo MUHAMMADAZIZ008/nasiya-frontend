@@ -149,3 +149,10 @@ export interface CalendarApi {
   total_day_debt: string;
   data: CalendarData[];
 }
+export interface CalendarTable {
+  key: string;
+  id: number;
+  total_debt_sum: string;
+  total_month: number;
+  full_name: string;
+}

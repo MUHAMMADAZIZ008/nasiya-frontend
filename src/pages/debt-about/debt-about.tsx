@@ -43,7 +43,6 @@ const DebtAbout = () => {
         debt_name: data?.debt_name,
         next_payment_date: data?.next_payment_date,
         debt_status: data?.debt_status,
-        debt_period: data?.debt_period,
         debt_sum: data?.debt_sum,
         description: data?.description,
         total_month: data?.total_month,
@@ -113,13 +112,6 @@ const DebtAbout = () => {
               <Input />
             </Form.Item>
 
-            <Form.Item<FieldType>
-              label="Period"
-              name="debt_period"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
 
             <Form.Item<FieldType>
               label="Total month"
