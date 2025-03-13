@@ -1,20 +1,31 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useOneDebt from "./service/query/use-one-debt";
-import { IDebtImage } from "../../interface";
-import { Button, Form, FormProps, Image, Input, message, Spin } from "antd";
+import { IDebt, IDebtImage } from "../../interface";
+import {
+  Button,
+  Form,
+  FormProps,
+  Image,
+  Input,
+  message,
+  Select,
+  Spin,
+} from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import "./css/debt-about.css";
 import { useDispatch } from "react-redux";
 import { changeValue } from "../../store/slices/boart";
+import useUpdateDebt from "./service/mutation/use-update-debt";
+import { DebtStatus } from "../../enum";
 type FieldType = {
   debt_name: string;
   next_payment_date: string;
   debt_status: string;
   debt_period: number;
   debt_sum: string;
-  total_month: number;
+  total_month: string;
   description: string;
   images?: IDebtImage[];
 };
@@ -23,21 +34,19 @@ const DebtAbout = () => {
   const dispatch = useDispatch();
   dispatch(changeValue({ title: "Debt", subTitle: "About" }));
 
+  const [submitToggle, setSubmitToggle] = useState<boolean>(false);
+
   const [messageApi, setOutput] = message?.useMessage();
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, isLoading, error } = useOneDebt(id || "");
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log("Success:", values);
-  };
-  
+
   if (error) {
     messageApi.error(error.message);
   }
 
   const [form] = Form.useForm();
   useEffect(() => {
-    
     if (data) {
       form.setFieldsValue({
         debt_name: data?.debt_name,
@@ -55,7 +64,33 @@ const DebtAbout = () => {
   const goBack = () => {
     navigate(-1);
   };
-  
+
+  // update debt
+  const { mutate: debtUpdateMu } = useUpdateDebt();
+  const onValuesChange = () =>
+    // changedValues: Partial<FieldType>,
+    // allValues: FieldType
+    {
+      setSubmitToggle(true);
+    };
+
+  const onFinish: FormProps<Partial<FieldType>>["onFinish"] = (values) => {
+    console.log("Success:", values);
+    debtUpdateMu(
+      { id: data?.id || "", data: values },
+      {
+        onSuccess: () => {
+          messageApi.success("successfully update!");
+        },
+        onError: (error) => {
+          console.log(error);
+
+          messageApi.error(error.message);
+        },
+      }
+    );
+  };
+
   return (
     <section className="debt__about">
       {setOutput}
@@ -67,6 +102,7 @@ const DebtAbout = () => {
           <Form
             form={form}
             name="basic"
+            onValuesChange={onValuesChange}
             layout="vertical"
             style={{ maxWidth: 500 }}
             initialValues={{ remember: true }}
@@ -109,31 +145,54 @@ const DebtAbout = () => {
               name="debt_status"
               rules={[{ required: true }]}
             >
-              <Input />
+              <Select
+                defaultValue={data?.debt_status}
+                style={{ width: 120 }}
+                value={"debt_status"}
+                options={[
+                  { value: DebtStatus.ACTIVE, label: "ACTIVE" },
+                  { value: DebtStatus.CLOSED, label: "CLOSED" },
+                ]}
+              />
             </Form.Item>
-
 
             <Form.Item<FieldType>
               label="Total month"
               name="total_month"
               rules={[{ required: true }]}
             >
-              <Input />
+              <Select defaultValue={data?.debt_period}>
+                <Select.Option value="1">Month 1</Select.Option>
+                <Select.Option value="2">Month 2</Select.Option>
+                <Select.Option value="3">Month 3</Select.Option>
+                <Select.Option value="4">Month 4</Select.Option>
+                <Select.Option value="5">Month 5</Select.Option>
+                <Select.Option value="6">Month 6</Select.Option>
+                <Select.Option value="7">Month 7</Select.Option>
+                <Select.Option value="8">Month 8</Select.Option>
+                <Select.Option value="9">Month 9</Select.Option>
+                <Select.Option value="10">Month 10</Select.Option>
+                <Select.Option value="11">Month 11</Select.Option>
+                <Select.Option value="12">Month 12</Select.Option>
+              </Select>
             </Form.Item>
-            <Form.Item>
-              {data?.images?.map((item) => (
-                <Image src={item.image}/>
+            <Form.Item
+              style={{ display: "flex", alignItems: "center", gap: "20px" }}
+            >
+              {data?.images?.map((item, index) => (
+                <Image key={index} width={150} src={item.image} />
               ))}
             </Form.Item>
             <Form.Item label={null}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
+              {submitToggle ? (
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              ) : (
+                ""
+              )}
             </Form.Item>
           </Form>
-        </div>
-        <div>
-          <h2>{data?.debt_name}</h2>
         </div>
       </div>
     </section>

@@ -14,5 +14,6 @@
     flex-grow: 1;
 }
 .profile__name {
+    margin-top: 20px;
     font-size: 30px;
 }

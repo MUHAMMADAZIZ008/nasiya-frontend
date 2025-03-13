@@ -10,13 +10,18 @@ import {
 } from "antd";
 import { useEffect } from "react";
 import useGetProfile from "./service/query/use-get-profile";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import useAvatarUpload from "./service/mutation/use-avatar-upload";
 import useUpdateStore from "./service/mutation/use-update-store";
 import { QueryClient } from "@tanstack/react-query";
 import "./css/profile.css";
 import { useDispatch } from "react-redux";
 import { changeValue } from "../../store/slices/boart";
+import useAvatarDelete from "./service/mutation/use-avatar-delete";
 
 type FieldType = {
   full_name?: string;
@@ -85,33 +90,79 @@ const Profile = () => {
     );
   };
 
+  // delete avatar
+  const { mutate: deleteAvatarMu } = useAvatarDelete();
+
+  const deletePicture = () => {
+    deleteAvatarMu(
+      { id: data?.id || "", image: null },
+      {
+        onSuccess: () => {
+          client.invalidateQueries({ queryKey: ["profile"] });
+        },
+        onError: (error) => {
+          messageApi.error(error.message);
+        },
+      }
+    );
+  };
+
   return (
     <section className="profile">
       {contextHolder}
       <div className="profile__wrapper">
         <div className="profile__aside">
-          <Upload
-            name="avatar"
-            listType="picture-card"
-            className="avatar-uploader"
-            showUploadList={false}
-            beforeUpload={() => false}
-            onChange={handleChange}
-          >
+          <div style={{ position: "relative", width: "100px" }}>
             {data?.image ? (
-              <Image
-                src={data.image}
-                alt="avatar"
-                height={100}
-                style={{ width: "100%" }}
-              />
+              <div>
+                <Image
+                  width={100}
+                  src={data?.image}
+                  alt="avatar"
+                  height={100}
+                  style={{ width: "100%" }}
+                />
+                <button
+                  onClick={deletePicture}
+                  style={{
+                    border: 0,
+                    position: "absolute",
+                    right: "0",
+                    bottom: "0",
+                    color: "white",
+                    fontWeight: "bold",
+                    width: "25px",
+                    height: "25px",
+                    borderRadius: "100%",
+                    fontSize: "16px",
+                    backgroundColor: "red",
+                    textAlign: "center",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  type="button"
+                >
+                  {isPending ? <LoadingOutlined /> : <DeleteOutlined />}
+                </button>
+              </div>
             ) : (
-              <button style={{ border: 0, background: "none" }} type="button">
-                {isPending ? <LoadingOutlined /> : <PlusOutlined />}
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </button>
+              <Upload
+                style={{ marginBottom: "20px" }}
+                name="avatar"
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                beforeUpload={() => false}
+                onChange={handleChange}
+              >
+                <button style={{ border: 0, background: "none" }} type="button">
+                  {isPending ? <LoadingOutlined /> : <PlusOutlined />}
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </button>
+              </Upload>
             )}
-          </Upload>
+          </div>
           <h2 className="profile__name">{data?.full_name}</h2>
         </div>
         <div className="profile__content">

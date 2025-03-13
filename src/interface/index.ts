@@ -21,7 +21,7 @@ export interface IDebt {
   next_payment_date: string;
   debt_status: string;
   debt_period: number;
-  debt_sum: number;
+  debt_sum: string;
   description: string;
   images: IDebtImage[];
 }
@@ -134,6 +134,13 @@ export interface Profile {
   status_code: number;
   message: string;
   data: Store;
+}
+
+//debt about
+export interface DebtAboutApi {
+  status_code: number;
+  message: string;
+  data: IDebt;
 }
 
 // calendar date
