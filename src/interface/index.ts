@@ -1,3 +1,5 @@
+import { PaymentType } from "../enum";
+
 export interface ILogin {
   login: string;
   hashed_password: string;
@@ -162,4 +164,11 @@ export interface CalendarTable {
   total_debt_sum: string;
   total_month: number;
   full_name: string;
+}
+
+export interface PaymentDataT {
+  sum: number;
+  type: PaymentType;
+  debtId: string;
+  monthCount: number
 }

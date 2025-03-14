@@ -1,13 +1,37 @@
-import { Collapse, Card, Typography, Button } from "antd";
-import { IDebt } from "../../../interface";
+import { Collapse, Card, Typography, Button, message } from "antd";
+import { IDebt, PaymentDataT } from "../../../interface";
+import useMonthPayment from "../service/mutation/use-month-payment";
+import { PaymentType } from "../../../enum";
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
 
 const QuenchOneMonth = ({ data }: { data: IDebt }) => {
+  const [messageApi, setOutput] = message?.useMessage();
+
   const dateNow = Date();
+  const { mutate, isPending } = useMonthPayment();
+  const onClick = () => {
+    
+    const paymentData: PaymentDataT = {
+      debtId: data.id,
+      sum: +data.debt_sum / data.debt_period,
+      type: PaymentType.ONE_MONTH,
+      monthCount: 1
+    };
+    mutate(paymentData, {
+      onSuccess: () => {
+        messageApi.success("successfully payed!");
+      },
+      onError: (error) => {
+        console.log(error);
+        
+      }
+    });
+  };
   return (
     <div style={{ width: "100%" }}>
+      {setOutput}
       <Collapse
         accordion
         style={{ width: "100%", borderRadius: 8, border: "1px solid #ddd" }}
@@ -21,6 +45,8 @@ const QuenchOneMonth = ({ data }: { data: IDebt }) => {
           </Card>
 
           <Button
+            onClick={onClick}
+            disabled={isPending}
             type="primary"
             block
             style={{

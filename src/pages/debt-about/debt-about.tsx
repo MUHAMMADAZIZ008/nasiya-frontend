@@ -20,6 +20,7 @@ import { changeValue } from "../../store/slices/boart";
 import useUpdateDebt from "./service/mutation/use-update-debt";
 import { DebtStatus } from "../../enum";
 import QuenchOneMonth from "./components/quench-one-month";
+import QuenchMultiMonth from "./components/quench-multi-month";
 type FieldType = {
   debt_name: string;
   next_payment_date: string;
@@ -41,6 +42,7 @@ const DebtAbout = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, isLoading, error } = useOneDebt(id || "");
+  console.log(data?.total_month, data?.debt_period);
 
   if (error) {
     messageApi.error(error.message);
@@ -197,7 +199,8 @@ const DebtAbout = () => {
           </Form>
         </div>
         <div className="debt__quench-box">
-          {data ? <QuenchOneMonth data={data} /> : ''}
+          {data ? <QuenchOneMonth data={data} /> : ""}
+          {data ? <QuenchMultiMonth data={data} /> : ""}
         </div>
       </div>
     </section>
