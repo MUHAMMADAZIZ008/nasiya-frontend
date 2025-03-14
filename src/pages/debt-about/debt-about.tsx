@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useOneDebt from "./service/query/use-one-debt";
-import { IDebt, IDebtImage } from "../../interface";
+import { IDebtImage } from "../../interface";
 import {
   Button,
   Form,
@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import { changeValue } from "../../store/slices/boart";
 import useUpdateDebt from "./service/mutation/use-update-debt";
 import { DebtStatus } from "../../enum";
+import QuenchOneMonth from "./components/quench-one-month";
 type FieldType = {
   debt_name: string;
   next_payment_date: string;
@@ -97,7 +98,7 @@ const DebtAbout = () => {
       <Button style={{ marginBottom: "10px" }} type="primary" onClick={goBack}>
         <ArrowLeftOutlined />
       </Button>
-      <div>
+      <div className="debt__wrapper">
         <div className="debt__form">
           <Form
             form={form}
@@ -108,6 +109,7 @@ const DebtAbout = () => {
             initialValues={{ remember: true }}
             onFinish={onFinish}
             autoComplete="off"
+            className="debt__about_form"
           >
             <Form.Item<FieldType>
               label="Debt name"
@@ -193,6 +195,9 @@ const DebtAbout = () => {
               )}
             </Form.Item>
           </Form>
+        </div>
+        <div className="debt__quench-box">
+          {data ? <QuenchOneMonth data={data} /> : ''}
         </div>
       </div>
     </section>

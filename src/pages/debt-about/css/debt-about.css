@@ -1,3 +1,19 @@
 .debt__about{
     padding-top: 30px;
 }
+.debt__wrapper {
+    display: flex;
+    align-items: self-start;
+    justify-content: space-between;
+}
+.debt__form {
+    width: 40%;
+}
+
+.debt__about_form {
+    margin: 0 auto;
+}
+
+.debt__quench-box {
+    width: 40%;
+}
