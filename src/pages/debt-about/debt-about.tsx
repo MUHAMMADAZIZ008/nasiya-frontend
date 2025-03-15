@@ -21,6 +21,7 @@ import useUpdateDebt from "./service/mutation/use-update-debt";
 import { DebtStatus } from "../../enum";
 import QuenchOneMonth from "./components/quench-one-month";
 import QuenchMultiMonth from "./components/quench-multi-month";
+import QuenchAnyMonth from "./components/quench-any-month";
 type FieldType = {
   debt_name: string;
   next_payment_date: string;
@@ -201,6 +202,7 @@ const DebtAbout = () => {
         <div className="debt__quench-box">
           {data ? <QuenchOneMonth data={data} /> : ""}
           {data ? <QuenchMultiMonth data={data} /> : ""}
+          {data ? <QuenchAnyMonth data={data} /> : ""}
         </div>
       </div>
     </section>
