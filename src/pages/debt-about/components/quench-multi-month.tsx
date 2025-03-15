@@ -78,7 +78,7 @@ const QuenchMultiMonth = ({ data }: { data: IDebt }) => {
         messageApi.success("successfully payed!");
       },
       onError: (error) => {
-        console.log(error);
+        messageApi.error(error.message)
       },
     });
   };
