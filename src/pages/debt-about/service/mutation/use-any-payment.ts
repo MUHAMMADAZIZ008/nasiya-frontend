@@ -6,7 +6,7 @@ const useAnyPayment = () => {
   return useMutation({
     mutationFn: (data: Omit<PaymentDataT, "monthCount">) =>
       request
-        .post("/payment/for-month", {
+        .post("/payment/for-any-sum", {
           sum: data.sum,
           type: data.type,
           debtId: data.debtId,
